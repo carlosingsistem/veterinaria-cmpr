@@ -47,5 +47,30 @@ def agendar():
         return redirect("/")
     return render_template('agendar.html')
 
+@app.route('/modificar/<int:id>', methods=('GET', 'POST'))
+def modificar(id):
+    conn = sqlite3.connect('citas.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM pacientes WHERE id = ?', (id,))
+    cita = cursor.fetchone()
+
+    if request.method == 'POST':
+        mascota = request.form['mascota']
+        propietario = request.form['propietario']
+        especie = request.form['especie']
+        fecha = request.form['fecha']
+        conn.execute("""
+            UPDATE pacientes SET mascota= ?, propietario=?, especie=?, fecha = ? WHERE id = ?
+        """, (mascota, propietario, especie, fecha, id))
+        conn.commit()
+        conn.close()
+        return redirect("/")
+
+    conn.close()
+    return render_template('modificar.html', cita=cita)
+
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
