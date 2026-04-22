@@ -10,9 +10,10 @@
             <div class="card-body">
                 <h5 class="card-title">{{ cita.mascota }} ({{ cita.especie }})</h5>
                 <p class="card-text"><strong>Dueño:</strong> {{ cita.propietario }}<br>
-                <strong>Fecha:</strong> {{ cita.fecha }}</p>
+                    <strong>Fecha:</strong> {{ cita.fecha }}
+                </p>
                 <a href="/modificar/{{ cita.id }}" class="btn btn-sm btn-warning">Editar</a>
-                <a href="#" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar cita?')">Cancelar</a>
+                <a href="/cancelar/{{ cita.id }}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar cita?')">Cancelar</a>
             </div>
         </div>
     </div>
