@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 import sqlite3
 
 app = Flask(__name__)
@@ -20,7 +20,7 @@ def init_database():
 init_database()
 
 @app.route("/")
-def index():
+def agenda():
     conn = sqlite3.connect('citas.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
@@ -28,6 +28,24 @@ def index():
     citas = cursor.fetchall()
 
     return render_template('index.html', citas=citas)
+
+@app.route('/agendar', methods=('GET', 'POST'))
+def agendar():
+    if request.method == 'POST':
+        mascota = request.form['mascota']
+        propietario = request.form['propietario']
+        especie = request.form['especie']
+        fecha = request.form['fecha']
+        
+        conn = sqlite3.connect('citas.db')
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO pacientes (mascota, propietario, especie, fecha) VALUES (?, ?, ?, ?)
+        """, (mascota, propietario, especie, fecha))
+        conn.commit()
+        conn.close()
+        return redirect("/")
+    return render_template('agendar.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
